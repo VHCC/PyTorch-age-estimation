@@ -12,20 +12,21 @@ import torch.backends.cudnn as cudnn
 import torch.optim
 import torch.utils.data
 import torch.nn.functional as F
+import timeit
 from model import get_model
 from defaults import _C as cfg
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description="Age estimation demo",
+    parser = argparse.ArgumentParser(description="*Age estimation demo*",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--resume", type=str, default=None,
+    parser.add_argument("-r", "--resume", type=str, default=None,
                         help="Model weight to be tested")
-    parser.add_argument("--margin", type=float, default=0.4,
+    parser.add_argument("-m", "--margin", type=float, default=0.4,
                         help="Margin around detected face for age-gender estimation")
-    parser.add_argument("--img_dir", type=str, default=None,
+    parser.add_argument("-i", "--img_dir", type=str, default=None,
                         help="Target image directory; if set, images in image_dir are used instead of webcam")
-    parser.add_argument("--output_dir", type=str, default=None,
+    parser.add_argument("-o", "--output_dir", type=str, default=None,
                         help="Output directory to which resulting images will be stored if set")
     parser.add_argument("opts", default=[], nargs=argparse.REMAINDER,
                         help="Modify config options using the command-line")
@@ -94,6 +95,7 @@ def main():
     # create model
     print("=> creating model '{}'".format(cfg.MODEL.ARCH))
     model = get_model(model_name=cfg.MODEL.ARCH, pretrained=None)
+    print("=check= torch.cuda.is_available, '{}'".format(torch.cuda.is_available()))
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = model.to(device)
 
@@ -117,6 +119,7 @@ def main():
     else:
         raise ValueError("=> no checkpoint found at '{}'".format(resume_path))
 
+    print("=> device '{}'".format(device))
     if device == "cuda":
         cudnn.benchmark = True
 
@@ -129,12 +132,15 @@ def main():
 
     with torch.no_grad():
         for img, name in image_generator:
+            # print(img)
             input_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             img_h, img_w, _ = np.shape(input_img)
 
             # detect faces using dlib detector
             detected = detector(input_img, 1)
+            # print((len(detected), img_size, img_size, 3))
             faces = np.empty((len(detected), img_size, img_size, 3))
+            # print("faces= " , len(detected))
 
             if len(detected) > 0:
                 for i, d in enumerate(detected):
@@ -155,8 +161,9 @@ def main():
 
                 # draw results
                 for i, d in enumerate(detected):
-                    label = "{}".format(int(predicted_ages[i]))
-                    draw_label(img, (d.left(), d.top()), label)
+                    age_label = "{}".format(int(predicted_ages[i]))
+                    print(d, age_label)
+                    draw_label(img, (d.left(), d.top()), age_label)
 
             if args.output_dir is not None:
                 output_path = output_dir.joinpath(name)
@@ -167,7 +174,10 @@ def main():
 
                 if key == 27:  # ESC
                     break
+            stop = timeit.default_timer()
+            print('exc Time: ', stop - start , " s")
 
 
 if __name__ == '__main__':
+    start = timeit.default_timer()
     main()

@@ -12,6 +12,7 @@ def get_model(model_name="se_resnext50_32x4d", num_classes=101, pretrained="imag
 
 
 def main():
+    print ("model.py")
     model = get_model()
     print(model)
 
