@@ -99,10 +99,10 @@ def yield_images_from_dir(img_dir):
     img_dir = Path(img_dir)
 
     for img_path in img_dir.glob("*.*"):
-        print("=> img_path= ", str(img_path))
-        print("=> img_path.name= ", img_path.name)
+        # print("=> img_path= ", str(img_path))
+        # print("=> img_path.name= ", img_path.name)
         img = cv2.imread(str(img_path), 1)
-        print("=> img= ", img)
+        # print("=> img= ", img)
         if img is not None:
             h, w, _ = img.shape
             r = 640 / max(w, h)
@@ -328,30 +328,30 @@ def main_fd_flask(file_path, fileName):
             print('exc Time: ', stop - start , " s, fileName= ", fileName)
             # print(datetime.today().strftime('%Y%m%d_%H%M%S'))
 
-# if __name__ == '__main__':
-#     start = timeit.default_timer()
-#     main_fd()
+if __name__ == '__main__':
+    start = timeit.default_timer()
+    main_fd()
 
 # 判斷自己執行非被當做引入的模組，因為 __name__ 這變數若被當做模組引入使用就不會是 __main__
-if __name__ == '__main__':
-    # create model
-    print("=> creating model '{}'".format(cfg.MODEL.ARCH))
-    model = get_model(model_name=cfg.MODEL.ARCH, pretrained=None)
-    print("=check= torch.cuda.is_available, '{}'".format(torch.cuda.is_available()))
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = model.to(device)
-
-    resume_path = Path(__file__).resolve().parent.joinpath("misc", "epoch044_0.02343_3.9984.pth")
-    checkpoint = torch.load(resume_path, map_location="cpu")
-    model.load_state_dict(checkpoint['state_dict'])
-    print("=> loaded checkpoint '{}'".format(resume_path))
-
-    print("=> device '{}'".format(device))
-    if device == "cuda":
-        cudnn.benchmark = True
-
-    model.eval()
-
-    detector = dlib.get_frontal_face_detector()
-
-    app.run(host='localhost', port=8000, debug=True)
+# if __name__ == '__main__':
+#     # create model
+#     print("=> creating model '{}'".format(cfg.MODEL.ARCH))
+#     model = get_model(model_name=cfg.MODEL.ARCH, pretrained=None)
+#     print("=check= torch.cuda.is_available, '{}'".format(torch.cuda.is_available()))
+#     device = "cuda" if torch.cuda.is_available() else "cpu"
+#     model = model.to(device)
+#
+#     resume_path = Path(__file__).resolve().parent.joinpath("misc", "epoch044_0.02343_3.9984.pth")
+#     checkpoint = torch.load(resume_path, map_location="cpu")
+#     model.load_state_dict(checkpoint['state_dict'])
+#     print("=> loaded checkpoint '{}'".format(resume_path))
+#
+#     print("=> device '{}'".format(device))
+#     if device == "cuda":
+#         cudnn.benchmark = True
+#
+#     model.eval()
+#
+#     detector = dlib.get_frontal_face_detector()
+#
+#     app.run(host='localhost', port=8000, debug=False)

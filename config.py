@@ -3,4 +3,4 @@ class Config(object):
 class ProdConfig(object):
     pass
 class DevConfig(object):
-    DEBUG = True
+    DEBUG = False
