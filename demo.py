@@ -29,6 +29,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config.from_object(DevConfig)
 
+@app.route('/api/getHello', methods=['GET'])
+def home():
+    return "Hello IChen 201910"
+
 @app.route("/api/postFile", methods=['POST'])
 def submit():
     if request.method == 'POST':
