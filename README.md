@@ -4,7 +4,9 @@
 PyTorch-based CNN implementation for estimating age from face images.
 Currently only the APPA-REAL dataset is supported.
 
-<img src="misc/example.png" width="800px">
+<img src="img_result/20191018_141317_img_A.jpeg" width="600px">
+<img src="img_result/20191018_141319_img_06.jpeg" width="600px">
+<img src="img_result/20191018_141320_img_04.jpeg" width="600px">
 
 ## Requirements
 
