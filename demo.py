@@ -354,4 +354,4 @@ if __name__ == '__main__':
 
     detector = dlib.get_frontal_face_detector()
 
-    app.run(host='localhost', port=8000, debug=True)
+    app.run(host='192.168.1.151', port=19998, debug=True)
